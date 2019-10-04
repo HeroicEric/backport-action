@@ -1,6 +1,8 @@
 name: Backport
 
-on: [issue_comment]
+on:
+  pull_request:
+    types: [closed]
 
 jobs:
   build:
@@ -30,18 +32,10 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-      - uses: actions/checkout@v1
-      - name: Run a one-line script
-        run: echo Hello, world!
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
 
       - uses: actions/checkout@v1
       - name: Run a one-line script
         run: echo Hello, world!
-        
       - name: Run a multi-line script
         run: |
           echo Add other actions to build,
