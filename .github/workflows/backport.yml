@@ -33,15 +33,17 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
 
-      - name: pull-request
-        uses: repo-sync/pull-request@v2
+      - name: Checkout
+        uses: actions/checkout@v1
         with:
-          # source_branch: ""                     # If blank, default: triggered branch
-          destination_branch: "targetme"          # If blank, default: master
-          pr_title: ":skull_and_crossbones: RECURSE"
-          pr_body: ":crown: *An automated PR* :skull_and_crossbones:"  # Full markdown support, requires pr_title to be set
-          pr_reviewer: "ryanlabouve"             # Comma-separated list (no spaces)
-          # pr_assignee: ""             # Comma-separated list (no spaces)
-          pr_label: "autoshenanigans"                   # Comma-separated list (no spaces)
-          # pr_milestone: "Milestone 1"           # Milestone name
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          ref: refs/heads/${{ github.head_ref }}
+
+      - name: Hello world action step
+        uses: ./.github/actions/backport-action/ # Uses an action in the root directory
+        id: hello
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Use the output from the `hello` step
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"
